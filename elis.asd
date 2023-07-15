@@ -2,6 +2,7 @@
   :serial t
   :components ((:file "conditions")
                (:file "parser")
+               (:file "executor")
                (:file "elis"))
   :in-order-to ((test-op (test-op "elis/tests"))))
 

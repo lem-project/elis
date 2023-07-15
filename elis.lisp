@@ -27,8 +27,15 @@
   t)
 
 (defun elis-execute (point string)
-  (message "~A" string)
-  (lem/listener-mode:refresh-prompt (point-buffer point) t))
+  (elis/executor:execute
+   string
+   :write-callback (lambda (string)
+                     (send-event (lambda ()
+                                   (let ((*inhibit-read-only* t))
+                                     (with-buffer-read-only (point-buffer point) nil
+                                       (insert-string point string))))))
+   :exit-process-callback (lambda ()
+                            (lem/listener-mode:refresh-prompt (point-buffer point) t))))
 
 (define-command elis () ()
   (lem/listener-mode:listener-start "*elis*" 'elis-mode))
