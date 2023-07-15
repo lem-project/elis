@@ -38,3 +38,9 @@
                (:execute "find" :current-directory)
                (:execute "wc" "-l"))
              (parser:parse "find . | wc -l"))))
+
+(deftest parse-error-test
+  (ok (signals (parser:parse "")
+               'elis/conditions:parse-input-error))
+  (ok (signals (parser:parse "  ")
+               'elis/conditions:parse-input-error)))

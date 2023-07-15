@@ -1,7 +1,8 @@
 (defsystem "elis"
   :serial t
-  :components ((:file "elis")
-               (:file "parser"))
+  :components ((:file "conditions")
+               (:file "parser")
+               (:file "elis"))
   :in-order-to ((test-op (test-op "elis/tests"))))
 
 (defsystem "elis/tests"

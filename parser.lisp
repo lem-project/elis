@@ -26,14 +26,18 @@
         (t
          :current-directory)))
 
-(defun read-ahead (stream)
+(defun read-ahead (stream &optional eof-error-p eof-value)
   (let ((*read-eval* nil)
         (*readtable* *elis-readtable*))
-    (read stream nil *eof-value*)))
+    (handler-case (read stream eof-error-p eof-value)
+      (end-of-file (e)
+        (error 'elis/conditions:parse-input-error
+               :message (princ-to-string e))))))
 
 (defun tokenize (string)
   (with-input-from-string (stream string)
-    (loop :for arg := (read-ahead stream)
+    (loop :for eof-error-p := t :then nil
+          :for arg := (read-ahead stream eof-error-p *eof-value*)
           :until (eq arg *eof-value*)
           :collect (typecase arg
                      (keyword arg)
